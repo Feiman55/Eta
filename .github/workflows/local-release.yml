@@ -53,7 +53,7 @@ jobs:
           ETA_RELEASE_KEY_ALIAS: ${{ secrets.ETA_RELEASE_KEY_ALIAS }}
           ETA_RELEASE_KEY_PASSWORD: ${{ secrets.ETA_RELEASE_KEY_PASSWORD }}
         run: |
-          ./.gradlew --no-daemon --no-configuration-cache \
+          ./gradlew --no-daemon --no-configuration-cache \
             "-Peta.buildMetadata=${GITHUB_SHA::7}" \
             :app:assembleRelease
 
