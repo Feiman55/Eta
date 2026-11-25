@@ -3,6 +3,9 @@ name: Local Release APK
 # 仅构建签名 Release APK，跳过 lint/单测，用于自编译分发。
 # 与上游 android-release.yml 独立，新增文件不影响同步。
 on:
+  push:
+    branches:
+      - local/voice-tile
   workflow_dispatch:
 
 permissions:
