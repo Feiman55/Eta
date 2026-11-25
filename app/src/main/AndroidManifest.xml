@@ -38,10 +38,10 @@
     <uses-permission android:name="android.permission.VIBRATE" />
 
     <permission
-        android:name="io.github.mangi.eta.permission.CONTROL_ACCESSIBILITY_PROTECTION"
+        android:name="${applicationId}.permission.CONTROL_ACCESSIBILITY_PROTECTION"
         android:protectionLevel="signature" />
 
-    <uses-permission android:name="io.github.mangi.eta.permission.CONTROL_ACCESSIBILITY_PROTECTION" />
+    <uses-permission android:name="${applicationId}.permission.CONTROL_ACCESSIBILITY_PROTECTION" />
 
     <queries>
         <package android:name="com.google.android.googlequicksearchbox" />
@@ -94,6 +94,29 @@
             android:exported="false"
             android:theme="@style/Theme.Eta"
             android:windowSoftInputMode="adjustResize" />
+
+        <!-- 快捷设置开关：点击等同长按电源键唤醒助理。按需绑定，无常驻开销。 -->
+        <service
+            android:name=".agent.voice.EtaVoiceAssistTileService"
+            android:exported="true"
+            android:icon="@drawable/ic_eta_voice_tile"
+            android:label="@string/eta_voice_tile_label"
+            android:permission="android.permission.BIND_QUICK_SETTINGS_TILE">
+            <intent-filter>
+                <action android:name="android.service.quicksettings.action.QS_TILE" />
+            </intent-filter>
+        </service>
+
+        <!-- 快捷开关的瞬时桥接：透明主题 + 独立任务栈，仅用于让系统收起控制中心面板。 -->
+        <activity
+            android:name=".agent.voice.EtaVoiceAssistBridgeActivity"
+            android:excludeFromRecents="true"
+            android:exported="false"
+            android:launchMode="singleTask"
+            android:noHistory="true"
+            android:showWhenLocked="true"
+            android:theme="@style/Theme.EtaVoiceAssistBridge"
+            android:taskAffinity="io.github.mangi.eta.voicebridge" />
 
         <activity
             android:name=".agent.voice.EtaVoiceAssistActivity"
@@ -190,7 +213,7 @@
 
         <provider
             android:name=".agent.accessibility.AgentAccessibilityHealthProvider"
-            android:authorities="io.github.mangi.eta.accessibility.health"
+            android:authorities="${applicationId}.accessibility.health"
             android:exported="true"
             android:grantUriPermissions="false"
             android:permission="android.permission.MANAGE_ACCESSIBILITY" />

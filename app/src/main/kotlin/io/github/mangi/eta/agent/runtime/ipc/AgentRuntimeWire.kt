@@ -104,7 +104,7 @@ internal object AgentRuntimeWire {
     /** service -> client：返回 steering 是否已被当前活跃 run 接纳及分配的补充序号。 */
     const val MSG_STEER_RESPONSE = 19
 
-    private const val MODULE_PACKAGE = "io.github.mangi.eta"
+    private val MODULE_PACKAGE = io.github.mangi.eta.BuildConfig.APPLICATION_ID
     private const val SERVICE_CLASS = "io.github.mangi.eta.agent.runtime.AgentRuntimeService"
 
     private const val KEY_TYPE = "type"

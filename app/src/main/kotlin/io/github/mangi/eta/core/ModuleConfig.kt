@@ -1,11 +1,13 @@
 package io.github.mangi.eta.core
 
+import io.github.mangi.eta.BuildConfig
+
 internal object ModuleConfig {
     const val TAG = "Eta"
     const val HOT_PATH_LOG_WINDOW_MS = 60_000L
 
     const val GOOGLE_PACKAGE = "com.google.android.googlequicksearchbox"
-    const val ETA_PACKAGE = "io.github.mangi.eta"
+    val ETA_PACKAGE: String = BuildConfig.APPLICATION_ID
     const val COLOROS_MEMORY_PACKAGE = "com.oplus.aimemory"
     const val XIAOAI_PACKAGE = "com.miui.voiceassist"
     const val XIAOMI_LAUNCHER_PACKAGE = "com.miui.home"
@@ -13,7 +15,7 @@ internal object ModuleConfig {
     val XIAOMI_LAUNCHER_PACKAGES = setOf(XIAOMI_LAUNCHER_PACKAGE, XIAOMI_GLOBAL_LAUNCHER_PACKAGE)
     const val GOOGLE_ASSISTANT_COMPONENT =
         "$GOOGLE_PACKAGE/com.google.android.voiceinteraction.GsaVoiceInteractionService"
-    const val ETA_VOICE_INTERACTION_COMPONENT =
+    val ETA_VOICE_INTERACTION_COMPONENT =
         "$ETA_PACKAGE/io.github.mangi.eta.agent.voice.EtaVoiceInteractionService"
     const val ASSISTANT_ROLE = "android.app.role.ASSISTANT"
     const val SECURE_ASSISTANT = "assistant"

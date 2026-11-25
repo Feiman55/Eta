@@ -67,11 +67,14 @@ android {
         debug {
             // 版本名带构建类型标记，设置页与 APK 文件名据此区分 Debug 包
             versionNameSuffix = "-debug" + buildMetadataSuffix
+            // 与官方包共存：独立 applicationId，避免同包名不同签名而无法安装。
+            applicationIdSuffix = ".feiman"
             isMinifyEnabled = false
             isPseudoLocalesEnabled = true
         }
         release {
             versionNameSuffix = buildMetadataSuffix
+            applicationIdSuffix = ".feiman"
             signingConfig = signingConfigs.findByName("release")
             isMinifyEnabled = true
             isShrinkResources = true
