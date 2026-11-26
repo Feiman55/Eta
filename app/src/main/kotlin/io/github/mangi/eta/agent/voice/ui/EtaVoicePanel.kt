@@ -649,7 +649,8 @@ private fun BoxScope.AssistantPanel(
                 if (sheetAlpha > 0f) {
                     drawRect(
                         colors.content.copy(
-                            alpha = colors.content.alpha * sheetAlpha,
+                            // [Eta-Fork] 叠加 EtaVoiceForkTuning.SHEET_ALPHA（上游原为完全不透明）
+                            alpha = colors.content.alpha * sheetAlpha * EtaVoiceForkTuning.SHEET_ALPHA,
                         ),
                     )
                 }
@@ -955,5 +956,6 @@ private fun assistantBaseHeightPx(
 ): Float {
     if (messages.isEmpty()) return 0f
     // 回复增量只改变列表内容，不重新估算浮窗高度，避免与跟底滚动互相追赶。
-    return (304f * density).coerceAtMost(maxHeightPx)
+    // [Eta-Fork] 初始高度改由 EtaVoiceForkTuning 统一控制（上游原值 304f）
+    return (EtaVoiceForkTuning.BASE_HEIGHT_DP * density).coerceAtMost(maxHeightPx)
 }
