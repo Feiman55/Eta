@@ -19,9 +19,9 @@ internal object EtaVoiceForkTuning {
     /**
      * [Eta-Fork] 面板本体不透明度（0f~1f，1f = 与上游一致的完全不透明）。
      *
-     * 取 0.7f 即「透明度 0.3」，可透过面板看到后方画面。
+     * 取 0.3f 即「不透明度 30% / 透明度 70%」，可大幅透出后方画面。
      * 浅色与深色主题共用此系数：面板底色来自主题色 colors.content，
      * 相乘后自动适配两套主题，无需分别定义。
      */
-    const val SHEET_ALPHA = 0.7f
+    const val SHEET_ALPHA = 0.3f
 }
