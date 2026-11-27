@@ -80,6 +80,8 @@ import kotlinx.coroutines.cancel
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
+import kotlinx.coroutines.withTimeoutOrNull
+import kotlinx.coroutines.flow.first
 import top.yukonga.miuix.kmp.squircle.LocalSquircleEnabled
 import io.github.mangi.eta.agent.voice.ui.EtaSpeechPhase
 import io.github.mangi.eta.agent.voice.ui.EtaSpeechState
@@ -593,11 +595,14 @@ internal class EtaAssistantOverlayService : Service(), LifecycleOwner, SavedStat
                         messages = finishRunMessages(runId, result),
                     )
                 }
-                if (!hiddenForForegroundOperation && !handedToRuntime && windowView?.isShown == true && result.ok &&
-                    getSystemService(PowerManager::class.java).isInteractive &&
+                // [Eta-Fork] 结果播报不再要求浮窗可见或屏幕点亮：
+                // 浮窗已转交 Runtime、或用户已锁屏时同样朗读结果；
+                // 播放期间由 AssistantSpeechForeground 把本服务提升为 mediaPlayback 前台服务承载 TTS。
+                if (!hiddenForForegroundOperation && result.ok &&
                     speechConfig?.autoSpeak == true && speechConfig.tts != TtsProvider.NONE) {
                     val messageId = uiState.messages.filterIsInstance<AgentMessageUi>().lastOrNull()?.id ?: runId
                     playback.speak(messageId, result.content, settings = speechConfig)
+                    stopAfterSpeakScheduled = true
                 }
                 if (!hiddenForForegroundOperation) {
                     updateSoftInput(visible = false)
@@ -607,7 +612,11 @@ internal class EtaAssistantOverlayService : Service(), LifecycleOwner, SavedStat
             runtimeClient.ackResult(runId)
             if (shouldStopAfterResult) {
                 withContext(Dispatchers.Main.immediate) {
-                    if (activeRunId == null) {
+                    // [Eta-Fork] 正在播报时把收尾推迟到播放状态回到空闲之后，
+                    // 否则停服会立刻杀掉 TTS 宿主，浮窗关闭后就听不到结果。
+                    if (stopAfterSpeakScheduled) {
+                        awaitSpeakThenStop()
+                    } else if (activeRunId == null) {
                         removeWindow()
                         stopSelf()
                     }
@@ -878,6 +887,28 @@ internal class EtaAssistantOverlayService : Service(), LifecycleOwner, SavedStat
         }
     }
 
+    /** [Eta-Fork] 本次结果已安排“播报结束再收尾”，用于推迟 stopSelf。 */
+    private var stopAfterSpeakScheduled = false
+
+    /**
+     * [Eta-Fork] 等待播报状态回到空闲后销毁浮窗服务。
+     *
+     * speak() 返回时播放状态已为非空闲，因此这里不会立即通过；
+     * withTimeoutOrNull 只作异常兜底，避免播放状态异常时服务常驻。
+     */
+    private fun awaitSpeakThenStop() {
+        stopAfterSpeakScheduled = false
+        scope.launch(Dispatchers.Main.immediate) {
+            withTimeoutOrNull(SPEAK_SETTLE_TIMEOUT_MS) {
+                playback.state.first { it.messageId == null && !it.loading }
+            }
+            if (activeRunId == null) {
+                removeWindow()
+                stopSelf()
+            }
+        }
+    }
+
     private fun openConversation() {
         if (handoffInProgress || activeRunId != null || uiState.messages.isEmpty()) return
         handoffInProgress = true
@@ -948,6 +979,8 @@ internal class EtaAssistantOverlayService : Service(), LifecycleOwner, SavedStat
         private const val SYNTHETIC_STOPPED = "eta_status:stopped"
         private const val SYNTHETIC_RUNTIME_FAILED = "eta_status:runtime_failed"
         private const val FOREGROUND_DISMISS_TIMEOUT_MS = 2_000L
+        /** [Eta-Fork] 等待播报结束的兜底上限，防止播放状态异常时浮窗服务常驻。 */
+        private const val SPEAK_SETTLE_TIMEOUT_MS = 15 * 60 * 1000L
         internal const val FRESH_ENTRY_COALESCE_WINDOW_MS = 5_000L
         private val mainHandler = Handler(Looper.getMainLooper())
 
