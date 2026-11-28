@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- [Eta-Fork] 语音唤醒相关文案，独立文件便于整体删除 -->
+<resources>
+    <string name="wake_word_title">语音唤醒</string>
+    <string name="wake_word_description">开关打开期间持续监听唤醒词。识别完全在本地完成，音频不会上传。</string>
+    <string name="wake_word_toggle">启用语音唤醒</string>
+    <string name="wake_word_status_on">正在监听。关闭开关即可停止并释放模型。</string>
+    <string name="wake_word_status_off">已停止。开关关闭时不占用麦克风。</string>
+    <string name="wake_word_presets_title">唤醒词</string>
+    <string name="wake_word_preset_item">%1$s（阈值 %2$s）</string>
+    <string name="wake_word_note">熄屏时仍会持续监听。Android 要求后台使用麦克风时必须显示一条常驻通知。</string>
+    <string name="wake_word_channel_name">语音唤醒</string>
+    <string name="wake_word_notification_title">语音唤醒已开启</string>
+    <string name="wake_word_notification_text">说出唤醒词即可唤起 Eta</string>
+    <string name="wake_word_action_stop">关闭</string>
+    <string name="wake_word_settings_title">语音唤醒</string>
+</resources>

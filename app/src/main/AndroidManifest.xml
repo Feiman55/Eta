@@ -132,6 +132,19 @@
             </intent-filter>
         </activity>
 
+        <!-- [Eta-Fork] 语音唤醒前台服务：仅在设置页开关打开时运行 -->
+        <service
+            android:name=".agent.wake.WakeWordService"
+            android:exported="false"
+            android:foregroundServiceType="microphone"
+            android:process=":voice" />
+
+        <!-- [Eta-Fork] 语音唤醒设置页 -->
+        <activity
+            android:name=".agent.wake.WakeWordActivity"
+            android:exported="false"
+            android:label="@string/wake_word_settings_title" />
+
         <service
             android:name=".agent.voice.EtaVoiceInteractionService"
             android:exported="true"

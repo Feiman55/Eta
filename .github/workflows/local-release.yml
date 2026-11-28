@@ -46,6 +46,24 @@ jobs:
           fi
           printf '%s' "$ETA_RELEASE_KEYSTORE_BASE64" | base64 --decode > "$RUNNER_TEMP/eta-release.jks"
 
+      # [Eta-Fork] 语音唤醒依赖：二进制不入库，构建时下载
+      - name: 下载语音唤醒依赖
+        run: |
+          set -euo pipefail
+          mkdir -p app/libs
+          curl -fsSL --retry 3 -o app/libs/sherpa-onnx.aar \
+            https://github.com/k2-fsa/sherpa-onnx/releases/download/v2.0.3/sherpa-onnx-2.0.3.aar
+          ls -lh app/libs/sherpa-onnx.aar
+
+          curl -fsSL --retry 3 -o /tmp/kws.tar.bz2 \
+            https://github.com/k2-fsa/sherpa-onnx/releases/download/kws-models/sherpa-onnx-kws-zipformer-wenetspeech-3.3M-2024-01-01-mobile.tar.bz2
+          rm -rf /tmp/kws && mkdir -p /tmp/kws
+          tar xjf /tmp/kws.tar.bz2 -C /tmp/kws
+          mkdir -p app/src/main/assets/wake/kws
+          cp -f /tmp/kws/*/* app/src/main/assets/wake/kws/ 2>/dev/null || cp -rf /tmp/kws/*/* app/src/main/assets/wake/kws/
+          echo "--- kws assets ---"
+          ls -lh app/src/main/assets/wake/kws | head -20
+
       - name: 构建 Release APK
         env:
           ETA_RELEASE_STORE_FILE: ${{ runner.temp }}/eta-release.jks

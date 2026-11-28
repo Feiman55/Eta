@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- [Eta-Fork] 语音唤醒相关文案，独立文件便于整体删除 -->
+<resources>
+    <string name="wake_word_title">Voice wake-up</string>
+    <string name="wake_word_description">Listens for the wake word while the switch is on. All recognition runs on-device; audio is never uploaded.</string>
+    <string name="wake_word_toggle">Enable wake word</string>
+    <string name="wake_word_status_on">Listening. Turn the switch off to stop and release the model.</string>
+    <string name="wake_word_status_off">Stopped. No microphone access while the switch is off.</string>
+    <string name="wake_word_presets_title">Wake words</string>
+    <string name="wake_word_preset_item">%1$s (threshold %2$s)</string>
+    <string name="wake_word_note">Listening continues while the screen is off. A persistent notification is required by Android for background microphone access.</string>
+    <string name="wake_word_channel_name">Voice wake-up</string>
+    <string name="wake_word_notification_title">Wake word is on</string>
+    <string name="wake_word_notification_text">Say the wake word to open Eta</string>
+    <string name="wake_word_action_stop">Turn off</string>
+    <string name="wake_word_settings_title">Voice wake-up</string>
+</resources>

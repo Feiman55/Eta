@@ -156,6 +156,8 @@ androidComponents {
 
 dependencies {
     coreLibraryDesugaring(libs.desugar.jdk.libs.nio)
+    // [Eta-Fork] 语音唤醒：sherpa-onnx AAR 由 CI 下载到 app/libs（不入 git）
+    implementation(files("libs/sherpa-onnx.aar"))
     implementation(libs.jsoup)
     implementation(libs.commons.compress)
     implementation(libs.xz)

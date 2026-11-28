@@ -622,6 +622,19 @@ private fun SettingsPageContent(
                     startAction = { SettingsIcon(Icons.Rounded.Mic) },
                     onClick = { onNavigate(AppRoute.SpeechSettings) },
                 )
+                // [Eta-Fork] 语音唤醒设置入口
+                ArrowPreference(
+                    title = stringResource(R.string.wake_word_settings_title),
+                    startAction = { SettingsIcon(Icons.Rounded.Mic) },
+                    onClick = {
+                        context.startActivity(
+                            android.content.Intent(
+                                context,
+                                io.github.mangi.eta.agent.wake.WakeWordActivity::class.java,
+                            ),
+                        )
+                    },
+                )
                 LanguagePreference(
                     startAction = { SettingsIcon(Icons.Rounded.Language) },
                 )

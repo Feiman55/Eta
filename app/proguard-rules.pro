@@ -70,3 +70,6 @@
 -keep class io.github.mangi.eta.agent.virtualdisplay.VirtualDisplayCommandMain {
     public static void main(java.lang.String[]);
 }
+
+# [Eta-Fork] 语音唤醒：sherpa-onnx 的 JNI 绑定依赖类名与方法名，禁止混淆
+-keep class com.k2fsa.sherpa.onnx.** { *; }

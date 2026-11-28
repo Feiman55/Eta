@@ -882,6 +882,11 @@ internal class EtaAssistantOverlayService : Service(), LifecycleOwner, SavedStat
         dismissalJob = scope.launch(Dispatchers.Main.immediate) {
             delay(HANDOFF_EXIT_DURATION_MS)
             removeWindow()
+            // [Eta-Fork] 通知语音唤醒服务：浮层已关闭，可以恢复监听
+            sendBroadcast(
+                Intent("io.github.mangi.eta.action.VOICE_OVERLAY_CLOSED")
+                    .setPackage(packageName),
+            )
             // 任务仍在后台执行时先保留服务，等结果确认后再退出。
             if (!handedOver) stopSelf()
         }
